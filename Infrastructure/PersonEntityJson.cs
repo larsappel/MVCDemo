@@ -9,6 +9,7 @@ public class PersonEntityJson
     [JsonPropertyName("name")]
     public string? Name { get; set; }
 
-    [JsonPropertyName("age")]
-    public int Age { get; set; }
+    [JsonPropertyName("birth_date")]
+    public DateTime BirthDate { get; set; }
+
 }

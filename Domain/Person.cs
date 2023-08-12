@@ -3,12 +3,12 @@ namespace MVCDemo.Domain;
 public class Person
 {
     public string Name { get; set; }
-    public int Age { get; set; }
+    public DateTime BirthDate { get; set; }
 
-    public Person(string name, int age)
+    public Person(string name, DateTime birthDate)
     {
         Name = name;
-        Age = age;
+        BirthDate = birthDate;
     }
 }
 

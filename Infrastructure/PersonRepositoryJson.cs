@@ -12,7 +12,7 @@ public class PersonRepositoryJson : IPersonRepository
         var persons = ReadFromFile();
         var personData = persons.Find(p => p.Id == id);
 
-        return personData != null ? new Person(personData.Name, personData.Age) : null;
+        return personData != null ? new Person(personData.Name, personData.BirthDate) : null;
     }
 
     private List<PersonEntityJson> ReadFromFile()

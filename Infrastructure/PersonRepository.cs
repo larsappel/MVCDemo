@@ -6,7 +6,7 @@ public class PersonRepository : IPersonRepository
 {
     public Person GetPersonById(int id)
     {
-        return new Person("John", 42); // Mock implementation
+        return new Person("John", new DateTime(1981, 5, 12)); // Mock implementation
     }
 }
 

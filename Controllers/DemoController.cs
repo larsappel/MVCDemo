@@ -52,10 +52,10 @@ public class DemoController : Controller
     {
         // Get the person from the service
         var personDTO = _personService.GetPerson();
-        var person = new Person
+        var person = new PersonViewModel
         {
             Name = personDTO.Name,
-            Age = personDTO.Age
+            BirthDate = personDTO.BirthDate
         };
 
         // Comment out the old code

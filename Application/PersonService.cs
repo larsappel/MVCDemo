@@ -17,7 +17,7 @@ public class PersonService : IPersonService
         return new PersonDTO
         {
             Name = person.Name,
-            Age = person.Age
+            BirthDate = person.BirthDate
         };
 
         // // Return a mock PersonDTO object
