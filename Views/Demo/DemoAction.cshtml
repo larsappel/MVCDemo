@@ -1,0 +1,18 @@
+<h1>DemoAction</h1>
+<p>@ViewData["Message"]</p>
+
+<!-- Plain HTML form with a POST method. The form will be submitted to the same page, and the data will be processed by the controller. -->
+<form method="post">
+    <input type="text" name="name" />
+    <input type="submit" value="Submit" />
+</form>
+
+<!-- Use asp.net tag helpers to create a form. The form will be submitted to the same page, and the data will be processed by the controller. -->
+<p>ASP Tag helper form</p>
+<form asp-controller="Demo" asp-action="DemoAction" method="post">
+    <input type="text" name="name" />
+    <input type="submit" value="Submit" />
+</form>
+
+<!-- Show the view data. -->
+<p>@ViewData["Name"]</p>

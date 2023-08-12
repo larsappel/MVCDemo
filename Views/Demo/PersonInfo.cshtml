@@ -1,0 +1,24 @@
+@model MVCDemo.Models.Person
+
+<h1>Person Info</h1>
+
+<form asp-action="PersonInfo" method="post">
+    <div class="form-group">
+        <label for="Name">Name:</label>
+        <input type="text" class="form-control" id="Name" asp-for="Name" required />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Age">Age:</label>
+        <input type="number" class="form-control" id="Age" asp-for="Age" required />
+        <span asp-validation-for="Age" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<p>@Model.Name is @Model.Age years old</p>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
