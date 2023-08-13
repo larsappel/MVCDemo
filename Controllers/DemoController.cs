@@ -69,7 +69,7 @@ public class DemoController : Controller
     }
 
     [HttpPost]
-    public IActionResult PersonInfo(Person model)
+    public IActionResult PersonInfo(PersonViewModel model)
     {
         if (ModelState.IsValid)
         {

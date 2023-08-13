@@ -5,7 +5,7 @@ namespace MVCDemo.Models;
 public class PersonViewModel
 {
     [Required]
-    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Use letters only, please")]
+    [RegularExpression(@"^[a-zA-Z]+( [a-zA-Z]+)*$", ErrorMessage = "Use letters only and only one space between names, please")]
     public string? Name { get; set; }
     public DateTime BirthDate { get; set; }
     public int Age
