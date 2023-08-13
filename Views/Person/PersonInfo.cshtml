@@ -1,0 +1,23 @@
+@model IEnumerable<MVCDemo.Models.PersonViewModel>
+
+<h2>Persons List</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Birth Date</th>
+            <th>Age</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var person in Model)
+        {
+            <tr>
+                <td>@person.Name</td>
+                <td>@person.BirthDate.ToString("yyyy-MM-dd")</td>
+                <td>@person.Age</td>
+            </tr>
+        }
+    </tbody>
+</table>
