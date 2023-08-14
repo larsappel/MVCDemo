@@ -11,6 +11,7 @@ builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<IPersonRepository, PersonRepositoryJson>();
 
 var app = builder.Build();
+app.Urls.Add("http://*:5000");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
