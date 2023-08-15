@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using MVCDemo.ApplicationServices;
 using MVCDemo.Domain;
 using MVCDemo.Infrastructure;
@@ -11,11 +12,23 @@ builder.Services.AddScoped<IPersonService, PersonService>();
 //builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepositoryJson>();
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie();
+// builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+//     .AddCookie();
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+    })
+    .AddCookie()
+    .AddGoogle(options =>
+    {
+        options.ClientId = "328182478687-208fpi36jf58q3fsu68896u9gt1hvo7v.apps.googleusercontent.com";
+        options.ClientSecret = "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";
+    });
 
 var app = builder.Build();
-app.Urls.Add("http://*:5000");
+//app.Urls.Add("http://*:5000");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

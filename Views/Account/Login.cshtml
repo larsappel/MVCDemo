@@ -27,6 +27,8 @@
     </div>
 </form>
 
+<a href="@Url.Action("GoogleLogin", "Account")" class="btn btn-primary">Login with Google</a>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
