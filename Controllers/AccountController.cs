@@ -13,9 +13,15 @@ public class AccountController : Controller
     private const string MockedUsername = "demo";
     private const string MockedPassword = "pass"; // Note: NEVER hard-code passwords in real applications.
 
-    public ActionResult Login()
+    public IActionResult Login(string? returnUrl = null)
     {
-        return View();
+        // Create an instance of the ViewModel to pass the returnUrl.
+        var model = new LoginViewModel 
+        {
+            ReturnUrl = returnUrl
+        };
+        
+        return View(model);
     }
 
     [HttpPost]
@@ -36,6 +42,12 @@ public class AccountController : Controller
             var principal = new ClaimsPrincipal(identity);
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+            // Redirect to the original URL if it was provided.
+            if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+            {
+                return LocalRedirect(model.ReturnUrl);
+            }
 
             return RedirectToAction("Index", "Home"); // Redirect to a secure area of your application.
         }
