@@ -3,7 +3,7 @@
 <h2>Login</h2>
 
 <form asp-action="Login" asp-controller="Account" method="post" asp-antiforgery="true">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>  <!-- Validation Summary here -->
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     @if (!string.IsNullOrEmpty(Model.ReturnUrl))
     {
@@ -11,14 +11,14 @@
     }
     
     <div>
-        <label asp-for="Username">Username:</label>
-        <input type="text" id="Username" asp-for="Username" required />
+        <label asp-for="Username"></label>
+        <input asp-for="Username" />
         <span asp-validation-for="Username" class="text-danger"></span>
     </div>
     
     <div>
-        <label asp-for="Password">Password:</label>
-        <input type="password" id="Password" asp-for="Password" required />
+        <label asp-for="Password"></label>
+        <input type="password" asp-for="Password" />
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
 
