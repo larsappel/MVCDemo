@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using MVCDemo.ApplicationServices;
 using MVCDemo.Domain;
 using MVCDemo.Infrastructure;
@@ -9,6 +10,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IPersonService, PersonService>();
 //builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepositoryJson>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie();
 
 var app = builder.Build();
 app.Urls.Add("http://*:5000");
@@ -26,6 +30,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

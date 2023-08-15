@@ -1,3 +1,7 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCDemo.Models;
 
@@ -16,7 +20,7 @@ public class AccountController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken] // This ensures that the form is submitted with a valid anti-forgery token to prevent CSRF attacks.
-    public ActionResult Login(LoginViewModel model)
+    public async Task<ActionResult> LoginAsync(LoginViewModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -26,11 +30,23 @@ public class AccountController : Controller
         // Mocked user verification
         if (model.Username == MockedUsername && model.Password == MockedPassword)
         {
-            // Normally, here you'd set up the session/cookie for the authenticated user.
+            // Set up the session/cookie for the authenticated user.
+            var claims = new[] { new Claim(ClaimTypes.Name, model.Username) };
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
             return RedirectToAction("Index", "Home"); // Redirect to a secure area of your application.
         }
 
         ModelState.AddModelError(string.Empty, "Invalid login attempt."); // Generic error message for security reasons.
         return View(model);
+    }
+
+    [Authorize]
+    public IActionResult Info()
+    {
+        return View();
     }
 }
