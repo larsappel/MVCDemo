@@ -49,4 +49,11 @@ public class AccountController : Controller
     {
         return View();
     }
+
+    [Authorize]
+    public async Task<IActionResult> LogoutAsync()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return RedirectToAction("Index", "Home");
+    }
 }
