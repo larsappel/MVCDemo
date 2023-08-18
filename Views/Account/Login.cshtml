@@ -28,6 +28,7 @@
 </form>
 
 <a href="@Url.Action("GoogleLogin", "Account")" class="btn btn-primary">Login with Google</a>
+<a href="@Url.Action("CognitoLogin", "Account")" class="btn btn-primary" >Login with Cognito</a>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

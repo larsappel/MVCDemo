@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using MVCDemo.ApplicationServices;
 using MVCDemo.Domain;
 using MVCDemo.Infrastructure;
@@ -18,21 +19,42 @@ builder.Services.AddScoped<IPersonService, PersonService>();
 //builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPersonRepository, PersonRepositoryJson>();
 
-// builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-//     .AddCookie();
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-    })
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie()
     .AddGoogle(options =>
     {
-        // options.ClientId = "328182478687-208fpi36jf58q3fsu68896u9gt1hvo7v.apps.googleusercontent.com";
-        // options.ClientSecret = "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";
         options.ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? throw new InvalidOperationException("Google ClientId is not set.");
         options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? throw new InvalidOperationException("Google ClientSecret is not set.");
+    })
+    .AddOpenIdConnect(options =>
+    {
+        options.ClientId = builder.Configuration["Authentication:Cognito:ClientId"] ?? throw new InvalidOperationException("Cognito ClientId is not set.");
+        options.ResponseType = builder.Configuration["Authentication:Cognito:ResponseType"] ?? throw new InvalidOperationException("Cognito ResponseType is not set.");
+        options.MetadataAddress = builder.Configuration["Authentication:Cognito:MetadataAddress"] ?? throw new InvalidOperationException("Cognito MetadataAddress is not set.");
+        options.Events = new OpenIdConnectEvents
+        {
+            OnRedirectToIdentityProviderForSignOut = context =>
+            {
+                context.ProtocolMessage.Scope = builder.Configuration["Authentication:Cognito:Scope"] ?? throw new InvalidOperationException("Cognito Scope is not set.");
+                context.ProtocolMessage.ResponseType = builder.Configuration["Authentication:Cognito:ResponseType"] ?? throw new InvalidOperationException("Cognito ResponseType is not set.");;
+                // context.ProtocolMessage.IssuerAddress = CognitoHelpers.GetCognitoLogoutUrl(builder.Configuration, context.HttpContext);
+
+                // Create Cognito logout URL
+                var cognitoDomain = builder.Configuration["Authentication:Cognito:CognitoDomain"] ?? throw new InvalidOperationException("Cognito CognitoDomain is not set.");
+                var clientId = builder.Configuration["Authentication:Cognito:ClientId"] ?? throw new InvalidOperationException("Cognito ClientId is not set.");
+                var appSignOutUrl = builder.Configuration["Authentication:Cognito:AppSignOutUrl"] ?? throw new InvalidOperationException("Cognito AppSignOutUrl is not set.");
+                var logoutUrl = $"{context.Request.Scheme}://{context.Request.Host}{appSignOutUrl}";
+                var cognitoLogoutUrl = $"{cognitoDomain}/logout?client_id={clientId}&logout_uri={logoutUrl}";
+
+                context.ProtocolMessage.IssuerAddress = cognitoLogoutUrl;
+
+                // Close authentication sessions
+                context.Properties.Items.Remove(CookieAuthenticationDefaults.AuthenticationScheme);
+                context.Properties.Items.Remove(OpenIdConnectDefaults.AuthenticationScheme);
+
+                return Task.CompletedTask;
+            }
+        };
     });
 
 var app = builder.Build();

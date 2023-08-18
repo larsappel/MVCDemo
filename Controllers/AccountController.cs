@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVCDemo.Models;
@@ -64,10 +65,15 @@ public class AccountController : Controller
     }
 
     [Authorize]
-    public async Task<IActionResult> LogoutAsync()
+    public IActionResult Logout()
     {
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        return RedirectToAction("Index", "Home");
+        return SignOut(
+            new AuthenticationProperties
+            {
+                RedirectUri = Url.Action("Index", "Home")
+            },
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            OpenIdConnectDefaults.AuthenticationScheme);
     }
 
     public IActionResult GoogleLogin()
@@ -90,5 +96,16 @@ public class AccountController : Controller
         // or to find an existing user.
 
         return RedirectToAction("Index", "Home");
+    }
+
+    public IActionResult CognitoLogin()
+    {
+        // Challenge the Cognito authentication scheme
+        return Challenge(
+            new AuthenticationProperties
+            {
+                RedirectUri = Url.Action("Index", "Home")
+            },
+            OpenIdConnectDefaults.AuthenticationScheme);
     }
 }
